@@ -1,5 +1,3 @@
 # WipeColor
- A mod for changing the death wipe color in Celeste.
-
-# TODO
-  - Don't apply to background in certain scenarios (vignettes, debug map, etc)
+A mod for changing the death wipe color in Celeste.
+I decided to make this after somebody requested it in the Celeste Discord server.
