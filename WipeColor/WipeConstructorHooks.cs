@@ -56,8 +56,11 @@ namespace Celeste.Mod.WipeColor {
 
         private static void MountainWipeHook(On.Celeste.MountainWipe.orig_ctor orig, MountainWipe wipe, Scene scene, bool wipeIn, Action onComplete = null) {
             orig(wipe, scene, wipeIn, onComplete);
-            DynData<MountainWipe> data = new DynData<MountainWipe>(wipe);
-            ModifyVertexBuffer(data.Get<VertexPositionColor[]>("vertexBuffer"));
+            
+            if ((ScreenWipe.WipeColor != Color.White) || Settings.AlwaysReplaceMountainWipe) {
+                DynData<MountainWipe> data = new DynData<MountainWipe>(wipe);
+                ModifyVertexBuffer(data.Get<VertexPositionColor[]>("vertexBuffer"));
+            }
         }
 
         private static void WindWipeHook(On.Celeste.WindWipe.orig_ctor orig, WindWipe wipe, Scene scene, bool wipeIn, Action onComplete = null) {

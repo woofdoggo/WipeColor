@@ -8,10 +8,12 @@ using System.Reflection;
 namespace Celeste.Mod.WipeColor {
     public partial class WipeColorModule : EverestModule {
         public static WipeColorModule Instance;
-        public static Color WipeColor = Color.Black;
-
+    
         public override Type SettingsType => typeof(WipeColorSettings);
         public static WipeColorSettings Settings => (WipeColorSettings) Instance._Settings;
+
+        public static Color WipeColor = Color.Black;
+        private static FieldInfo WipeColorField = typeof(WipeColorModule).GetField("WipeColor", BindingFlags.Public | BindingFlags.Static);
 
         public WipeColorModule() {
             Instance = this;
@@ -41,6 +43,8 @@ namespace Celeste.Mod.WipeColor {
             On.Celeste.WindWipe.ctor += WindWipeHook;
 
             // Extra hooks
+            IL.Celeste.FadeWipe.Render += FadeRenderHook;
+            IL.Celeste.HeartWipe.Render += HeartRenderHook;
             IL.Celeste.SpotlightWipe.Render += SpotlightRenderHook;
         }
 
@@ -57,25 +61,48 @@ namespace Celeste.Mod.WipeColor {
             On.Celeste.WindWipe.ctor -= WindWipeHook;
 
             // Extra hooks
+            IL.Celeste.FadeWipe.Render -= FadeRenderHook;
+            IL.Celeste.HeartWipe.Render -= HeartRenderHook;
             IL.Celeste.SpotlightWipe.Render -= SpotlightRenderHook;
+        }
+
+        private static void FadeRenderHook(ILContext context) {
+            ILCursor cursor = new ILCursor(context);
+
+            while (cursor.TryGotoNext(MoveType.After, instr => instr.MatchLdsfld("Celeste.ScreenWipe", "WipeColor"))) {
+                Logger.Log("WipeColor/FadeRender", $"Applying wipe color hook to {cursor.Index} in {cursor.Method.FullName}");
+
+                cursor.Index--;
+                cursor.Remove();
+                cursor.Emit(OpCodes.Ldsfld, WipeColorField);
+            }
+        }
+
+        private static void HeartRenderHook(ILContext context) {
+            ILCursor cursor = new ILCursor(context);
+
+            while (cursor.TryGotoNext(MoveType.After, instr => instr.MatchLdsfld("Celeste.ScreenWipe", "WipeColor"))) {
+                Logger.Log("WipeColor/HeartRender", $"Applying wipe color hook to {cursor.Index} in {cursor.Method.FullName}");
+
+                cursor.Index--;
+                cursor.Remove();
+                cursor.Emit(OpCodes.Ldsfld, WipeColorField);
+            }
         }
 
         private static void SpotlightRenderHook(ILContext context) {
             ILCursor cursor = new ILCursor(context);
-            FieldInfo field = typeof(WipeColorModule).GetField("WipeColor", BindingFlags.Public | BindingFlags.Static);
             
             while (cursor.TryGotoNext(MoveType.After, instr => instr.MatchLdsfld("Celeste.ScreenWipe", "WipeColor"))) {
                 Logger.Log("WipeColor/SpotlightRender", $"Applying wipe color hook to {cursor.Index} in {cursor.Method.FullName}");
 
                 cursor.Index--;
                 cursor.Remove();
-                cursor.Emit(OpCodes.Ldsfld, field);
+                cursor.Emit(OpCodes.Ldsfld, WipeColorField);
             }
         }
 
-        // TODO: Fade wipe
-        // TODO: HeartWipe.Render IL Hook
-        // TODO: Spotlight wipe
         // TODO: Make apply background color better
+        // TODO: Core, summit vignettes
     }
 }

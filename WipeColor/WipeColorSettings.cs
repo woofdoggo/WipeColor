@@ -25,5 +25,10 @@ namespace Celeste.Mod.WipeColor {
         [SettingSubText("Whether or not the wipe color should also apply to the background (during chapter entry, etc)")]
         [SettingNeedsRelaunch]
         public bool BackgroundEnabled { get; set; } = true;
+
+        [SettingInGame(true)]
+        [SettingName("modoptions_wipecolormodule_applymountainwipe")]
+        [SettingSubText("Whether or not the mountain wipe color should be changed, even when it is white")]
+        public bool AlwaysReplaceMountainWipe { get; set; } = false;
     }
 }
