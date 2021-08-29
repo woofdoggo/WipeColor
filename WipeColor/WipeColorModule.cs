@@ -1,6 +1,4 @@
 using Microsoft.Xna.Framework;
-using Monocle;
-using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using System;
 using System.Reflection;
@@ -13,7 +11,6 @@ namespace Celeste.Mod.WipeColor {
         public static WipeColorSettings Settings => (WipeColorSettings) Instance._Settings;
 
         public static Color WipeColor = Color.Black;
-        private static FieldInfo WipeColorField = typeof(WipeColorModule).GetField("WipeColor", BindingFlags.Public | BindingFlags.Static);
 
         public WipeColorModule() {
             Instance = this;
