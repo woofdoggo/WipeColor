@@ -34,6 +34,10 @@ namespace Celeste.Mod.WipeColor {
             IL.Celeste.FadeWipe.Render += FadeRenderHook;
             IL.Celeste.HeartWipe.Render += HeartRenderHook;
             IL.Celeste.SpotlightWipe.Render += SpotlightRenderHook;
+
+            On.Celeste.Editor.MapEditor.ctor += MapEditorCtorHook;
+            On.Celeste.Editor.MapEditor.MakeMapEditorBetter += MapEditorBetterHook;
+            On.Celeste.Editor.MapEditor.Update += MapEditorUpdateHook;
         }
 
         public override void Unload() {
@@ -52,6 +56,10 @@ namespace Celeste.Mod.WipeColor {
             IL.Celeste.FadeWipe.Render -= FadeRenderHook;
             IL.Celeste.HeartWipe.Render -= HeartRenderHook;
             IL.Celeste.SpotlightWipe.Render -= SpotlightRenderHook;
+
+            On.Celeste.Editor.MapEditor.ctor -= MapEditorCtorHook;
+            On.Celeste.Editor.MapEditor.MakeMapEditorBetter -= MapEditorBetterHook;
+            On.Celeste.Editor.MapEditor.Update -= MapEditorUpdateHook;
         }
 
         public static void ApplyClearColor() {

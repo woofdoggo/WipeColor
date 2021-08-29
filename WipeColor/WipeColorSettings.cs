@@ -7,7 +7,7 @@ namespace Celeste.Mod.WipeColor {
     [SettingName("modoptions_wipecolormodule_title")]
     public class WipeColorSettings : EverestModuleSettings {
         [SettingName("modoptions_wipecolormodule_enabled")]
-        [SettingSubText("Whether or not the mod should change the screen wipe color.")]
+        [SettingSubText("Whether or not the mod should change the screen wipe color")]
         public bool ModEnabled {
             get => _Enabled;
             set {
@@ -29,6 +29,10 @@ namespace Celeste.Mod.WipeColor {
         [SettingName("modoptions_wipecolormodule_applymountainwipe")]
         [SettingSubText("Whether or not the mountain wipe color should be changed, even when it is white")]
         public bool AlwaysReplaceMountainWipe { get; set; } = false;
+
+        [SettingName("modoptions_wipecolormodule_applyindebug")]
+        [SettingSubText("Whether or not the map editor should have its background color changed")]
+        public bool ApplyToDebugMap { get; set; } = false;
 
         [SettingMaxLength(6)]
         [SettingName("modoptions_wipecolormodule_wipecolor")]
