@@ -7,6 +7,7 @@
     <ItemGroup>
         <Reference Include="Celeste" HintPath="..\..\..\Celeste.exe" Private="false" />
         <Reference Include="MMHOOK_Celeste" HintPath="..\..\..\MMHOOK_Celeste.dll" Private="false" />
+        <Reference Include="MonoMod.Utils" HintPath="..\..\..\MonoMod.Utils.dll" Private="false" />
         <Reference Include="YamlDotNet" HintPath="..\..\..\YamlDotNet.dll" Private="false" />
     </ItemGroup>
 

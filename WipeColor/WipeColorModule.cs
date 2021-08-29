@@ -1,10 +1,9 @@
 using Microsoft.Xna.Framework;
 using Monocle;
 using System;
-using System.Collections;
 
 namespace Celeste.Mod.WipeColor {
-    public class WipeColorModule : EverestModule {
+    public partial class WipeColorModule : EverestModule {
         public static WipeColorModule Instance;
 
         public override Type SettingsType => typeof(WipeColorSettings);
@@ -12,15 +11,10 @@ namespace Celeste.Mod.WipeColor {
 
         public WipeColorModule() {
             Instance = this;
+            
         }
 
         public override void Load() {
-            On.Celeste.AscendManager.Removed += AscendManagerRemovedHook;
-            On.Celeste.CS10_Ending.OnEnd += CS10_EndingHook;
-            On.Celeste.Level.Begin += LevelBeginHook;
-            On.Celeste.Level.End += LevelEndHook;
-            On.Celeste.LevelEnter.Go += LevelEnterHook;
-
             if (Settings.BackgroundEnabled) {
                 try {
                     Monocle.Engine.ClearColor = Calc.HexToColor(Settings.WipeColorString);
@@ -30,40 +24,39 @@ namespace Celeste.Mod.WipeColor {
                     Logger.LogDetailed(e, "WipeColor");
                 }
             }
+
+            // Wipe constructors
+            On.Celeste.AngledWipe.ctor += AngledWipeHook;
+            On.Celeste.CurtainWipe.ctor += CurtainWipeHook;
+            On.Celeste.DreamWipe.ctor += DreamWipeHook;
+            On.Celeste.DropWipe.ctor += DropWipeHook;
+            On.Celeste.FallWipe.ctor += FallWipeHook;
+            On.Celeste.HeartWipe.ctor += HeartWipeHook;
+            On.Celeste.KeyDoorWipe.ctor += KeyDoorWipeHook;
+            On.Celeste.MountainWipe.ctor += MountainWipeHook;
+            On.Celeste.WindWipe.ctor += WindWipeHook;
+
+
         }
 
-        public override void Unload()
-        {
-            On.Celeste.AscendManager.Removed -= AscendManagerRemovedHook;
-            On.Celeste.CS10_Ending.OnEnd -= CS10_EndingHook;
-            On.Celeste.Level.Begin -= LevelBeginHook;
-            On.Celeste.Level.End -= LevelEndHook;
-            On.Celeste.LevelEnter.Go -= LevelEnterHook;
+        public override void Unload() {
+            // Wipe constructors
+            On.Celeste.AngledWipe.ctor -= AngledWipeHook;
+            On.Celeste.CurtainWipe.ctor -= CurtainWipeHook;
+            On.Celeste.DreamWipe.ctor -= DreamWipeHook;
+            On.Celeste.DropWipe.ctor -= DropWipeHook;
+            On.Celeste.FallWipe.ctor -= FallWipeHook;
+            On.Celeste.HeartWipe.ctor -= HeartWipeHook;
+            On.Celeste.KeyDoorWipe.ctor -= KeyDoorWipeHook;
+            On.Celeste.MountainWipe.ctor -= MountainWipeHook;
+            On.Celeste.WindWipe.ctor -= WindWipeHook;
+
+
         }
 
-        private static void AscendManagerRemovedHook(On.Celeste.AscendManager.orig_Removed orig, AscendManager self, Scene scene) {
-            orig(self, scene);
-            if (Settings.ModEnabled) ScreenWipe.WipeColor = Calc.HexToColor(Settings.WipeColorString);
-        }
-
-        private static void CS10_EndingHook(On.Celeste.CS10_Ending.orig_OnEnd orig, CS10_Ending self, Level level) {
-            orig(self, level);
-            if (Settings.ModEnabled) ScreenWipe.WipeColor = Calc.HexToColor(Settings.WipeColorString);
-        }
-
-        private static void LevelBeginHook(On.Celeste.Level.orig_Begin orig, Level self) {
-            orig(self);
-            if (Settings.ModEnabled) ScreenWipe.WipeColor = Calc.HexToColor(Settings.WipeColorString);
-        }
-
-        private static void LevelEndHook(On.Celeste.Level.orig_End orig, Level self) {
-            orig(self);
-            ScreenWipe.WipeColor = Color.Black;
-        }
-
-        private static void LevelEnterHook(On.Celeste.LevelEnter.orig_Go orig, Session session, bool fromSaveData) {
-            orig(session, fromSaveData);
-            if (Settings.ModEnabled) ScreenWipe.WipeColor = Calc.HexToColor(Settings.WipeColorString);
-        }
+        // TODO: Fade wipe
+        // TODO: HeartWipe.Render IL Hook
+        // TODO: Spotlight wipe
+        // TODO: Make apply background color better
     }
 }
