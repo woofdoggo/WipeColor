@@ -38,6 +38,12 @@ namespace Celeste.Mod.WipeColor {
             On.Celeste.Editor.MapEditor.ctor += MapEditorCtorHook;
             On.Celeste.Editor.MapEditor.MakeMapEditorBetter += MapEditorBetterHook;
             On.Celeste.Editor.MapEditor.Update += MapEditorUpdateHook;
+
+            On.Celeste.LevelEnter.Go += LevelEnterGoHook;
+            On.Celeste.IntroVignette.End += IntroVignetteFinishHook;
+            On.Celeste.SummitVignette.Update += SummitVignetteUpdateHook;
+            On.Celeste.CoreVignette.StartGame += CoreVignetteFinishHook;
+            On.Celeste.CoreVignette.ReturnToMap += CoreVignetteRtmHook;
         }
 
         public override void Unload() {
@@ -60,6 +66,12 @@ namespace Celeste.Mod.WipeColor {
             On.Celeste.Editor.MapEditor.ctor -= MapEditorCtorHook;
             On.Celeste.Editor.MapEditor.MakeMapEditorBetter -= MapEditorBetterHook;
             On.Celeste.Editor.MapEditor.Update -= MapEditorUpdateHook;
+
+            On.Celeste.LevelEnter.Go -= LevelEnterGoHook;
+            On.Celeste.IntroVignette.End -= IntroVignetteFinishHook;
+            On.Celeste.SummitVignette.Update -= SummitVignetteUpdateHook;
+            On.Celeste.CoreVignette.StartGame -= CoreVignetteFinishHook;
+            On.Celeste.CoreVignette.ReturnToMap -= CoreVignetteRtmHook;
         }
 
         public static void ApplyClearColor() {
