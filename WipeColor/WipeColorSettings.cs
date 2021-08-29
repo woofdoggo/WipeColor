@@ -6,7 +6,7 @@ using YamlDotNet.Serialization;
 namespace Celeste.Mod.WipeColor {
     [SettingName("modoptions_wipecolormodule_title")]
     public class WipeColorSettings : EverestModuleSettings {
-        [SettingInGame(false)]
+        [SettingInGame(true)]
         [SettingName("modoptions_wipecolormodule_enabled")]
         [SettingSubText("Whether or not the mod should change the screen wipe color.")]
         public bool ModEnabled { get; set; } = true;
@@ -20,11 +20,16 @@ namespace Celeste.Mod.WipeColor {
             set => WipeColorModule.WipeColor = Calc.HexToColor(value);
         }
 
-        [SettingInGame(false)]
+        [SettingInGame(true)]
         [SettingName("modoptions_wipecolormodule_backgroundcolor")]
         [SettingSubText("Whether or not the wipe color should also apply to the background (during chapter entry, etc)")]
-        [SettingNeedsRelaunch]
-        public bool BackgroundEnabled { get; set; } = true;
+        public bool BackgroundEnabled { 
+            get => WipeColorModule.ClearColor;
+            set {
+                WipeColorModule.ClearColor = value;
+                WipeColorModule.ApplyClearColor();
+            }
+        }
 
         [SettingInGame(true)]
         [SettingName("modoptions_wipecolormodule_applymountainwipe")]

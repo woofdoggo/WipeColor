@@ -13,23 +13,15 @@ namespace Celeste.Mod.WipeColor {
         public static WipeColorSettings Settings => (WipeColorSettings) Instance._Settings;
 
         public static Color WipeColor = Color.Black;
+        public static bool ClearColor = false;
         private static FieldInfo WipeColorField = typeof(WipeColorModule).GetField("WipeColor", BindingFlags.Public | BindingFlags.Static);
 
         public WipeColorModule() {
             Instance = this;
-            
         }
 
         public override void Load() {
-            if (Settings.BackgroundEnabled) {
-                try {
-                    Monocle.Engine.ClearColor = Calc.HexToColor(Settings.WipeColorString);
-                } catch (Exception e) {
-                    Monocle.Engine.ClearColor = Color.Black;
-                    Logger.Log(LogLevel.Warn, "WipeColor", "Failed to set ClearColor");
-                    Logger.LogDetailed(e, "WipeColor");
-                }
-            }
+            ApplyClearColor();
 
             // Wipe constructors
             On.Celeste.AngledWipe.ctor += AngledWipeHook;
@@ -64,6 +56,14 @@ namespace Celeste.Mod.WipeColor {
             IL.Celeste.FadeWipe.Render -= FadeRenderHook;
             IL.Celeste.HeartWipe.Render -= HeartRenderHook;
             IL.Celeste.SpotlightWipe.Render -= SpotlightRenderHook;
+        }
+
+        public static void ApplyClearColor() {
+            if (ClearColor) {
+                Monocle.Engine.ClearColor = WipeColor;
+            } else {
+                Monocle.Engine.ClearColor = Color.Black;
+            }
         }
 
         private static void FadeRenderHook(ILContext context) {
@@ -101,8 +101,5 @@ namespace Celeste.Mod.WipeColor {
                 cursor.Emit(OpCodes.Ldsfld, WipeColorField);
             }
         }
-
-        // TODO: Make apply background color better
-        // TODO: Core, summit vignettes
     }
 }

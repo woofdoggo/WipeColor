@@ -7,8 +7,10 @@ using System;
 namespace Celeste.Mod.WipeColor {
     public partial class WipeColorModule : EverestModule {
         private static void ModifyVertexBuffer(VertexPositionColor[] buf) {
-            for (int i = 0; i < buf.Length; i++) {
-                buf[i].Color = WipeColor;
+            if (Settings.ModEnabled) {
+                for (int i = 0; i < buf.Length; i++) {
+                    buf[i].Color = WipeColor;
+                }
             }
         }
 
@@ -33,7 +35,7 @@ namespace Celeste.Mod.WipeColor {
         private static void DropWipeHook(On.Celeste.DropWipe.orig_ctor orig, DropWipe wipe, Scene scene, bool wipeIn, Action onComplete = null) {
             orig(wipe, scene, wipeIn, onComplete);
             DynData<DropWipe> data = new DynData<DropWipe>(wipe);
-            data["color"] = WipeColor;
+            if (Settings.ModEnabled) data["color"] = WipeColor;
         }
 
         private static void FallWipeHook(On.Celeste.FallWipe.orig_ctor orig, FallWipe wipe, Scene scene, bool wipeIn, Action onComplete = null) {
