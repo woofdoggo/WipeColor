@@ -39,7 +39,10 @@ namespace Celeste.Mod.WipeColor {
         [SettingSubText("The hex color to set the screen wipe to. Make sure this is valid!")]
         public string WipeColorString {
             get => WipeColorModule.WipeColor.R.ToString("X2") + WipeColorModule.WipeColor.G.ToString("X2") + WipeColorModule.WipeColor.B.ToString("X2");
-            set => WipeColorModule.WipeColor = Calc.HexToColor(value);
+            set {
+                WipeColorModule.WipeColor = Calc.HexToColor(value);
+                WipeColorModule.ApplyClearColor();
+            }
         }
 
 
