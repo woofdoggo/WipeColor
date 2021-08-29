@@ -13,7 +13,6 @@ namespace Celeste.Mod.WipeColor {
         public static WipeColorSettings Settings => (WipeColorSettings) Instance._Settings;
 
         public static Color WipeColor = Color.Black;
-        public static bool ClearColor = false;
         private static FieldInfo WipeColorField = typeof(WipeColorModule).GetField("WipeColor", BindingFlags.Public | BindingFlags.Static);
 
         public WipeColorModule() {
@@ -59,11 +58,16 @@ namespace Celeste.Mod.WipeColor {
         }
 
         public static void ApplyClearColor() {
-            if (ClearColor) {
+            if (Settings.BackgroundEnabled && Settings.ModEnabled) {
                 Monocle.Engine.ClearColor = WipeColor;
             } else {
                 Monocle.Engine.ClearColor = Color.Black;
             }
+        }
+
+        private static Color GetWipeColor() {
+            if (Settings.ModEnabled) return WipeColor;
+            else return Color.Black;
         }
 
         private static void FadeRenderHook(ILContext context) {
@@ -74,7 +78,7 @@ namespace Celeste.Mod.WipeColor {
 
                 cursor.Index--;
                 cursor.Remove();
-                cursor.Emit(OpCodes.Ldsfld, WipeColorField);
+                cursor.EmitDelegate<Func<Color>>(GetWipeColor);
             }
         }
 
@@ -86,7 +90,7 @@ namespace Celeste.Mod.WipeColor {
 
                 cursor.Index--;
                 cursor.Remove();
-                cursor.Emit(OpCodes.Ldsfld, WipeColorField);
+                cursor.EmitDelegate<Func<Color>>(GetWipeColor);
             }
         }
 
@@ -98,7 +102,7 @@ namespace Celeste.Mod.WipeColor {
 
                 cursor.Index--;
                 cursor.Remove();
-                cursor.Emit(OpCodes.Ldsfld, WipeColorField);
+                cursor.EmitDelegate<Func<Color>>(GetWipeColor);
             }
         }
     }

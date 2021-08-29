@@ -3,4 +3,3 @@
 
 # TODO
   - Don't apply to background in certain scenarios (vignettes, debug map, etc)
-  - Abide by the "Enabled" setting in IL hooks

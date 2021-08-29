@@ -6,12 +6,30 @@ using YamlDotNet.Serialization;
 namespace Celeste.Mod.WipeColor {
     [SettingName("modoptions_wipecolormodule_title")]
     public class WipeColorSettings : EverestModuleSettings {
-        [SettingInGame(true)]
         [SettingName("modoptions_wipecolormodule_enabled")]
         [SettingSubText("Whether or not the mod should change the screen wipe color.")]
-        public bool ModEnabled { get; set; } = true;
+        public bool ModEnabled {
+            get => _Enabled;
+            set {
+                _Enabled = value;
+                WipeColorModule.ApplyClearColor();
+            }
+        }
 
-        [SettingInGame(false)]
+        [SettingName("modoptions_wipecolormodule_backgroundcolor")]
+        [SettingSubText("Whether or not the wipe color should also apply to the background (during chapter entry, etc)")]
+        public bool BackgroundEnabled { 
+            get => _BackgroundEnabled;
+            set {
+                _BackgroundEnabled = value;
+                WipeColorModule.ApplyClearColor();
+            }
+        }
+
+        [SettingName("modoptions_wipecolormodule_applymountainwipe")]
+        [SettingSubText("Whether or not the mountain wipe color should be changed, even when it is white")]
+        public bool AlwaysReplaceMountainWipe { get; set; } = false;
+
         [SettingMaxLength(6)]
         [SettingName("modoptions_wipecolormodule_wipecolor")]
         [SettingSubText("The hex color to set the screen wipe to. Make sure this is valid!")]
@@ -20,20 +38,14 @@ namespace Celeste.Mod.WipeColor {
             set => WipeColorModule.WipeColor = Calc.HexToColor(value);
         }
 
-        [SettingInGame(true)]
-        [SettingName("modoptions_wipecolormodule_backgroundcolor")]
-        [SettingSubText("Whether or not the wipe color should also apply to the background (during chapter entry, etc)")]
-        public bool BackgroundEnabled { 
-            get => WipeColorModule.ClearColor;
-            set {
-                WipeColorModule.ClearColor = value;
-                WipeColorModule.ApplyClearColor();
-            }
-        }
 
-        [SettingInGame(true)]
-        [SettingName("modoptions_wipecolormodule_applymountainwipe")]
-        [SettingSubText("Whether or not the mountain wipe color should be changed, even when it is white")]
-        public bool AlwaysReplaceMountainWipe { get; set; } = false;
+
+        [YamlIgnore]
+        [SettingIgnore]
+        private bool _BackgroundEnabled { get; set; } = true;
+
+        [YamlIgnore]
+        [SettingIgnore]
+        private bool _Enabled { get; set; } = true;
     }
 }
