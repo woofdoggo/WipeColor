@@ -15,7 +15,10 @@ namespace Celeste.Mod.WipeColor {
         [SettingMaxLength(6)]
         [SettingName("modoptions_wipecolormodule_wipecolor")]
         [SettingSubText("The hex color to set the screen wipe to. Make sure this is valid!")]
-        public string WipeColorString { get; set; } = "000000";
+        public string WipeColorString {
+            get => WipeColorModule.WipeColor.R.ToString("X2") + WipeColorModule.WipeColor.G.ToString("X2") + WipeColorModule.WipeColor.B.ToString("X2");
+            set => WipeColorModule.WipeColor = Calc.HexToColor(value);
+        }
 
         [SettingInGame(false)]
         [SettingName("modoptions_wipecolormodule_backgroundcolor")]

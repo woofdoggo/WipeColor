@@ -7,9 +7,8 @@ using System;
 namespace Celeste.Mod.WipeColor {
     public partial class WipeColorModule : EverestModule {
         private static void ModifyVertexBuffer(VertexPositionColor[] buf) {
-            Color col = Calc.HexToColor(Settings.WipeColorString);
             for (int i = 0; i < buf.Length; i++) {
-                buf[i].Color = col;
+                buf[i].Color = WipeColor;
             }
         }
 
@@ -34,7 +33,7 @@ namespace Celeste.Mod.WipeColor {
         private static void DropWipeHook(On.Celeste.DropWipe.orig_ctor orig, DropWipe wipe, Scene scene, bool wipeIn, Action onComplete = null) {
             orig(wipe, scene, wipeIn, onComplete);
             DynData<DropWipe> data = new DynData<DropWipe>(wipe);
-            data["color"] = Calc.HexToColor(Settings.WipeColorString);
+            data["color"] = WipeColor;
         }
 
         private static void FallWipeHook(On.Celeste.FallWipe.orig_ctor orig, FallWipe wipe, Scene scene, bool wipeIn, Action onComplete = null) {
@@ -46,13 +45,13 @@ namespace Celeste.Mod.WipeColor {
         private static void HeartWipeHook(On.Celeste.HeartWipe.orig_ctor orig, HeartWipe wipe, Scene scene, bool wipeIn, Action onComplete = null) {
             orig(wipe, scene, wipeIn, onComplete);
             DynData<HeartWipe> data = new DynData<HeartWipe>(wipe);
-            ModifyVertexBuffer(data.Get<VertexPositionColor[]>("vertexBuffer"));
+            ModifyVertexBuffer(data.Get<VertexPositionColor[]>("vertex"));
         }
 
         private static void KeyDoorWipeHook(On.Celeste.KeyDoorWipe.orig_ctor orig, KeyDoorWipe wipe, Scene scene, bool wipeIn, Action onComplete = null) {
             orig(wipe, scene, wipeIn, onComplete);
             DynData<KeyDoorWipe> data = new DynData<KeyDoorWipe>(wipe);
-            ModifyVertexBuffer(data.Get<VertexPositionColor[]>("vertexBuffer"));
+            ModifyVertexBuffer(data.Get<VertexPositionColor[]>("vertex"));
         }
 
         private static void MountainWipeHook(On.Celeste.MountainWipe.orig_ctor orig, MountainWipe wipe, Scene scene, bool wipeIn, Action onComplete = null) {
