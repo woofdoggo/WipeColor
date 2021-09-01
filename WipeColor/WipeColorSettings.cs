@@ -44,7 +44,7 @@ namespace Celeste.Mod.WipeColor {
                 if (WipeColorModule.StarfieldEffect != null) {
                     EffectParameter colorParam = WipeColorModule.StarfieldEffect.Parameters["WipeColor"];
                     if (colorParam != null) {
-                        colorParam.SetValue(new Vector4(WipeColorModule.WipeColor.R, WipeColorModule.WipeColor.G, WipeColorModule.WipeColor.B, WipeColorModule.WipeColor.A));
+                        colorParam.SetValue(new Vector4(WipeColorModule.WipeColor.R / 255f, WipeColorModule.WipeColor.G / 255f, WipeColorModule.WipeColor.B / 255f, WipeColorModule.WipeColor.A / 255f));
                     }
                 }
             }

@@ -85,7 +85,7 @@ namespace Celeste.Mod.WipeColor {
             } else {
                 try {
                     StarfieldEffect = new Effect(Engine.Graphics.GraphicsDevice, starfieldFx.Data);
-                    StarfieldEffect.Parameters["WipeColor"].SetValue(new Vector4(WipeColorModule.WipeColor.R, WipeColorModule.WipeColor.G, WipeColorModule.WipeColor.B, WipeColorModule.WipeColor.A));
+                    StarfieldEffect.Parameters["WipeColor"].SetValue(new Vector4(WipeColorModule.WipeColor.R / 255f, WipeColorModule.WipeColor.G / 255f, WipeColorModule.WipeColor.B / 255f, WipeColorModule.WipeColor.A / 255f));
                     Logger.Log("WipeColor", "Registered pixel shader as effect");
                 } catch (Exception e) {
                     Logger.Log(LogLevel.Error, "WipeColor", "Failed to create starfield pixel shader");
