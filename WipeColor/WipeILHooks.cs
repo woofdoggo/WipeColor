@@ -1,4 +1,6 @@
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Mono.Cecil.Cil;
 using MonoMod.Cil;
 using System.Reflection;
 using System;
@@ -45,6 +47,29 @@ namespace Celeste.Mod.WipeColor {
                 cursor.Index--;
                 cursor.Remove();
                 cursor.EmitDelegate<Func<Color>>(GetWipeColor);
+            }
+        }
+
+        private static void StarfieldRenderHook(ILContext context) {
+            ILCursor cursor = new ILCursor(context);
+
+            while (cursor.TryGotoNext(MoveType.After, instr => instr.MatchLdsfld("Celeste.StarfieldWipe", "SubtractBlendmode"))) {
+                Logger.Log("WipeColor/StarfieldRender", $"Applying blendstate hook to {cursor.Index} in {cursor.Method.FullName}");
+
+                cursor.Prev.Operand = typeof(BlendState).GetField("AlphaBlend", BindingFlags.Public | BindingFlags.Static);
+            }
+
+            while (cursor.TryGotoNext(MoveType.After, 
+                instr => instr.OpCode == OpCodes.Ldsfld,
+                instr => instr.OpCode == OpCodes.Ldnull,
+                instr => instr.OpCode == OpCodes.Ldnull,
+                instr => instr.OpCode == OpCodes.Ldnull)) 
+            {
+                Logger.Log("WipeColor/StarfieldRender", $"Applying effect hook to {cursor.Index} in {cursor.Method.FullName}");
+
+                cursor.Index--;
+                cursor.Remove();
+                cursor.Emit(OpCodes.Ldsfld, typeof(WipeColorModule).GetField("StarfieldEffect", BindingFlags.Public | BindingFlags.Static));
             }
         }
     }

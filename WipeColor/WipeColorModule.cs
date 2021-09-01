@@ -1,7 +1,7 @@
 using Microsoft.Xna.Framework;
-using MonoMod.Cil;
+using Microsoft.Xna.Framework.Graphics;
+using Monocle;
 using System;
-using System.Reflection;
 
 namespace Celeste.Mod.WipeColor {
     public partial class WipeColorModule : EverestModule {
@@ -11,6 +11,8 @@ namespace Celeste.Mod.WipeColor {
         public static WipeColorSettings Settings => (WipeColorSettings) Instance._Settings;
 
         public static Color WipeColor = Color.Black;
+
+        public static Effect StarfieldEffect;
 
         public WipeColorModule() {
             Instance = this;
@@ -34,6 +36,7 @@ namespace Celeste.Mod.WipeColor {
             IL.Celeste.FadeWipe.Render += FadeRenderHook;
             IL.Celeste.HeartWipe.Render += HeartRenderHook;
             IL.Celeste.SpotlightWipe.Render += SpotlightRenderHook;
+            IL.Celeste.StarfieldWipe.Render += StarfieldRenderHook;
 
             On.Celeste.Editor.MapEditor.ctor += MapEditorCtorHook;
             On.Celeste.Editor.MapEditor.MakeMapEditorBetter += MapEditorBetterHook;
@@ -62,6 +65,7 @@ namespace Celeste.Mod.WipeColor {
             IL.Celeste.FadeWipe.Render -= FadeRenderHook;
             IL.Celeste.HeartWipe.Render -= HeartRenderHook;
             IL.Celeste.SpotlightWipe.Render -= SpotlightRenderHook;
+            IL.Celeste.StarfieldWipe.Render -= StarfieldRenderHook;
 
             On.Celeste.Editor.MapEditor.ctor -= MapEditorCtorHook;
             On.Celeste.Editor.MapEditor.MakeMapEditorBetter -= MapEditorBetterHook;
@@ -72,6 +76,22 @@ namespace Celeste.Mod.WipeColor {
             On.Celeste.SummitVignette.Update -= SummitVignetteUpdateHook;
             On.Celeste.CoreVignette.StartGame -= CoreVignetteFinishHook;
             On.Celeste.CoreVignette.ReturnToMap -= CoreVignetteRtmHook;
+        }
+
+        public override void LoadContent(bool firstLoad) {
+            ModAsset starfieldFx = Everest.Content.Get("StarfieldShader.cso", true);
+            if (starfieldFx == null) {
+                Logger.Log(LogLevel.Error, "WipeColor", "Failed to load starfield pixel shader from mod");
+            } else {
+                try {
+                    StarfieldEffect = new Effect(Engine.Graphics.GraphicsDevice, starfieldFx.Data);
+                    StarfieldEffect.Parameters["WipeColor"].SetValue(new Vector4(WipeColorModule.WipeColor.R, WipeColorModule.WipeColor.G, WipeColorModule.WipeColor.B, WipeColorModule.WipeColor.A));
+                    Logger.Log("WipeColor", "Registered pixel shader as effect");
+                } catch (Exception e) {
+                    Logger.Log(LogLevel.Error, "WipeColor", "Failed to create starfield pixel shader");
+                    Logger.LogDetailed(e);
+                }
+            }
         }
 
         public static void ApplyClearColor() {

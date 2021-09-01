@@ -1,13 +1,12 @@
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using Monocle;
-using System;
 using YamlDotNet.Serialization;
 
 namespace Celeste.Mod.WipeColor {
     [SettingName("modoptions_wipecolormodule_title")]
     public class WipeColorSettings : EverestModuleSettings {
         [SettingName("modoptions_wipecolormodule_enabled")]
-        [SettingSubText("Whether or not the mod should change the screen wipe color")]
         public bool ModEnabled {
             get => _Enabled;
             set {
@@ -17,7 +16,7 @@ namespace Celeste.Mod.WipeColor {
         }
 
         [SettingName("modoptions_wipecolormodule_backgroundcolor")]
-        [SettingSubText("Whether or not the wipe color should also apply to the background (during chapter entry, etc)")]
+        [SettingSubText("Should the wipe color be applied to the background?")]
         public bool BackgroundEnabled { 
             get => _BackgroundEnabled;
             set {
@@ -27,21 +26,27 @@ namespace Celeste.Mod.WipeColor {
         }
 
         [SettingName("modoptions_wipecolormodule_applymountainwipe")]
-        [SettingSubText("Whether or not the mountain wipe color should be changed, even when it is white")]
         public bool AlwaysReplaceMountainWipe { get; set; } = false;
 
         [SettingName("modoptions_wipecolormodule_applyindebug")]
-        [SettingSubText("Whether or not the map editor should have its background color changed")]
+        [SettingSubText("Change the background of the map editor")]
         public bool ApplyToDebugMap { get; set; } = false;
 
         [SettingMaxLength(6)]
         [SettingName("modoptions_wipecolormodule_wipecolor")]
-        [SettingSubText("The hex color to set the screen wipe to. Make sure this is valid!")]
+        [SettingSubText("The hex color to set the screen wipe to")]
         public string WipeColorString {
             get => WipeColorModule.WipeColor.R.ToString("X2") + WipeColorModule.WipeColor.G.ToString("X2") + WipeColorModule.WipeColor.B.ToString("X2");
             set {
                 WipeColorModule.WipeColor = Calc.HexToColor(value);
                 WipeColorModule.ApplyClearColor();
+
+                if (WipeColorModule.StarfieldEffect != null) {
+                    EffectParameter colorParam = WipeColorModule.StarfieldEffect.Parameters["WipeColor"];
+                    if (colorParam != null) {
+                        colorParam.SetValue(new Vector4(WipeColorModule.WipeColor.R, WipeColorModule.WipeColor.G, WipeColorModule.WipeColor.B, WipeColorModule.WipeColor.A));
+                    }
+                }
             }
         }
 
